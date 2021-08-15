@@ -8,6 +8,7 @@ npm install
 ### Compiles and hot-reloads for development
 ```
 npm run serve
+tinygo build -o ./public/main.wasm -target wasm ./wasm
 ```
 
 ### Compiles and minifies for production

@@ -23,14 +23,6 @@ if (typeof global !== "undefined") {
 	throw new Error("cannot export Go (neither global, window nor self is defined)");
 }
 
-if (!global.require && typeof require !== "undefined") {
-	global.require = require;
-}
-
-if (!global.fs && global.require) {
-	global.fs = require("fs");
-}
-
 const enosys = () => {
 	const err = new Error("not implemented");
 	err.code = "ENOSYS";
@@ -511,28 +503,6 @@ global.Go = class {
 			return event.result;
 		};
 	}
-}
-
-if (
-	global.require &&
-	global.process &&
-	global.process.versions &&
-	!global.process.versions.electron
-) {
-	if (process.argv.length != 3) {
-		console.error("usage: go_js_wasm_exec [wasm binary] [arguments]");
-		process.exit(1);
-	}
-
-	// eslint-disable-next-line no-undef
-	const go = new Go();
-	// eslint-disable-next-line no-undef
-	WebAssembly.instantiate(fs.readFileSync(process.argv[2]), go.importObject).then((result) => {
-		return go.run(result.instance);
-	}).catch((err) => {
-		console.error(err);
-		process.exit(1);
-	});
 }
 
 export default global.Go
